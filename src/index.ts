@@ -1,3 +1,3 @@
-import { init } from "./infra/dom-adapter";
+import { init } from './infra/dom-adapter'
 
-window.onload = init;
+window.onload = init
