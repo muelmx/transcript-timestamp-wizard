@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - run: echo $NODE_ENV
       - run: npm ci && npm run lint && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
