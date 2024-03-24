@@ -37,19 +37,23 @@ const onFilesChange = (e: Event): void => {
 };
 
 const onTransform = async(e: Event): Promise<void> => {
-  const files = getFilesFromInput();
-  const result = await transformInputFiles(
-    files.map((f) => BrowserFileProvider.forFile(f)),
-    new ClientZipBlobProvider()
-  );
-
-  // make and click a temporary link to download the Blob
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(result);
-  link.download = 'result.zip';
-  link.click();
-  link.remove();
-  resetToInitial();
+  try {
+    const files = getFilesFromInput();
+    const result = await transformInputFiles(
+      files.map((f) => BrowserFileProvider.forFile(f)),
+      new ClientZipBlobProvider(),
+    );
+    // make and click a temporary link to download the Blob
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(result);
+    link.download = 'result.zip';
+    link.click();
+    link.remove();
+    resetToInitial();
+  } catch (error) {
+    // TODO: improve error rendering
+    alert(error);
+  }
 };
 
 export function init(): void {

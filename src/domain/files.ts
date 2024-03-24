@@ -47,7 +47,7 @@ export class OutputFileContent {
 export class InputFile {
   private constructor(
     public readonly fileName: FileName,
-    public readonly fileContent: InputFileContent
+    public readonly fileContent: InputFileContent,
   ) {}
 
   public static forFile(name: FileName, content: InputFileContent): InputFile {
@@ -58,15 +58,17 @@ export class InputFile {
 export class OutputFile {
   private constructor(
     public readonly inputFile: InputFile,
-    public readonly fileContent: OutputFileContent
+    public readonly fileContent: OutputFileContent,
   ) {}
 
   public static forContent(
     inputFile: InputFile,
-    content: OutputFileContent
+    content: OutputFileContent,
   ): OutputFile {
     if (inputFile.fileContent.value === content.value) {
-      throw new Error('illegal output file, content did not change');
+      throw new Error(
+        `illegal output file, content of ${inputFile.fileName.value} did not change`,
+      );
     }
     return new OutputFile(inputFile, content);
   }
