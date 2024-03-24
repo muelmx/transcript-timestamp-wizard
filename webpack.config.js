@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const HtmlInlineScriptPlugin = require('html-inline-script-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 
-const isDev = process.env.NODE_ENV !== 'CI'
+const isDev = process.env.NODE_ENV === 'development'
 
 module.exports = {
   mode: isDev ? 'none' : 'production',
