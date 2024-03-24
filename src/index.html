@@ -1,21 +1,43 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <meta charset="utf-8" />
     <title>Transcript Timestamp Wizard</title>
-</head>
+  </head>
 
-<body>
-    <h1>Transcript Timestamp Wizard</h1>
-    <div>
+  <body>
+    <div id="content">
+      <h1>Transcript Timestamp Wizard</h1>
+      <ol>
+        <li>Choose one or more files.</li>
+        <li>Click "transform".</li>
+        <li>The results will be downloaded automatically.</li>
+      </ol>
+      <p>
+        The conversion happens locally on your browser.
+        <b>No data is leaving your computer.</b>
+      </p>
+      <div>
         <p>
-            <input id="fileSelect" type="file" multiple />
+          <input id="fileSelect" type="file" multiple />
         </p>
         <p>
-            <button id="doTransform" disabled>Transform</button>
+          <button id="doTransform" disabled>Transform</button>
         </p>
+      </div>
     </div>
-</body>
-
+  </body>
+  <footer>
+    <hr />
+    <p>Jakob Sponholz, Maximilian Mueller</p>
+    <p>
+      <a href="https://github.com/muelmx/transcript-timestamp-wizard"
+        >Source Code</a
+      >
+      <a
+        href="https://github.com/muelmx/transcript-timestamp-wizard/blob/main/LICENSE"
+        >License</a
+      >
+    </p>
+  </footer>
 </html>

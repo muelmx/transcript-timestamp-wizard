@@ -24,7 +24,21 @@ module.exports = {
         test: /\.tsx?$/,
         use: 'ts-loader',
         exclude: /node_modules/
-      }
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          {
+            loader: 'style-loader',
+            options: {
+              insert: 'head', // insert style tag inside of <head>
+              injectType: 'singletonStyleTag' // this is for wrap all your style in just one style tag
+            },
+          },
+          "css-loader",
+          "sass-loader"
+        ],
+      },
     ]
   },
   optimization: {
