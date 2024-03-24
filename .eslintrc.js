@@ -21,5 +21,7 @@ module.exports = {
   },
   rules: {
     "@typescript-eslint/semi": "off",
+    "@typescript-eslint/space-before-function-paren": ["error", "never"],
+    "@typescript-eslint/comma-dangle": 0
   },
 };

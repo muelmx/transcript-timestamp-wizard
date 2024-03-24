@@ -2,7 +2,7 @@ import { type InputWithSizeMeta, downloadZip } from 'client-zip';
 import { type BlobProvider, type OutputFile } from '../domain/files';
 
 export class ClientZipBlobProvider implements BlobProvider {
-  async generateBlob (files: OutputFile[]): Promise<Blob> {
+  async generateBlob(files: OutputFile[]): Promise<Blob> {
     const now = new Date();
     const zipContent: InputWithSizeMeta[] = files.map((f) => ({
       input: f.fileContent.value,

@@ -6,7 +6,7 @@ import {
 } from '../domain/files';
 import { Transformer } from '../domain/transformer';
 
-export const transformInputFile = async (
+export const transformInputFile = async(
   provider: FileProvider
 ): Promise<OutputFile> => {
   const inputFile = await provider.provideFile();
@@ -22,11 +22,11 @@ const isRejected = <T>(
   p: PromiseSettledResult<T>
 ): p is PromiseRejectedResult => p.status === 'rejected';
 
-export const transformInputFiles = async (
+export const transformInputFiles = async(
   inputProvider: FileProvider[],
   blobProvider: BlobProvider
 ): Promise<Blob> => {
-  const readPromises = inputProvider.map(async (i) => await i.provideFile());
+  const readPromises = inputProvider.map(async(i) => await i.provideFile());
   const inputReaderResult = await Promise.allSettled<InputFile>(readPromises);
 
   const failed = inputReaderResult.filter(isRejected);

@@ -7,64 +7,67 @@ export interface BlobProvider {
 }
 
 export class FileName {
-  private constructor (public readonly value: string) {}
+  private constructor(public readonly value: string) {}
 
-  public static fromString (unsafe: string): FileName {
-    const safe = unsafe.trim()
+  public static fromString(unsafe: string): FileName {
+    const safe = unsafe.trim();
     if (safe.length < 3 || safe.length > 256) {
-      throw new Error('illegal file name')
+      throw new Error('illegal file name');
     }
-    return new FileName(safe)
+    return new FileName(safe);
   }
 }
 
 export class InputFileContent {
-  private constructor (public readonly value: string) {}
+  private constructor(public readonly value: string) {}
 
-  public static fromString (unsafe: string): InputFileContent {
-    const safe = unsafe.trim()
+  public static fromString(unsafe: string): InputFileContent {
+    const safe = unsafe.trim();
     if (safe.length < 1) {
-      throw new Error('illegal file content')
+      throw new Error('illegal file content');
     }
     // TODO: regex validation
-    return new InputFileContent(safe)
+    return new InputFileContent(safe);
   }
 }
 
 export class OutputFileContent {
-  private constructor (public readonly value: string) {}
+  private constructor(public readonly value: string) {}
 
-  public static fromString (unsafe: string): OutputFileContent {
-    const safe = unsafe.trim()
+  public static fromString(unsafe: string): OutputFileContent {
+    const safe = unsafe.trim();
     if (safe.length < 1) {
-      throw new Error('illegal file content')
+      throw new Error('illegal file content');
     }
     // TODO: regex validation
-    return new OutputFileContent(safe)
+    return new OutputFileContent(safe);
   }
 }
 
 export class InputFile {
-  private constructor (
+  private constructor(
     public readonly fileName: FileName,
     public readonly fileContent: InputFileContent
   ) {}
 
-  public static forFile (name: FileName, content: InputFileContent): InputFile {
-    return new InputFile(name, content)
+  public static forFile(name: FileName, content: InputFileContent): InputFile {
+    return new InputFile(name, content);
   }
 }
 
 export class OutputFile {
-  private constructor (
+  private constructor(
     public readonly inputFile: InputFile,
     public readonly fileContent: OutputFileContent
   ) {}
 
-  public static forContent (inputFile: InputFile, content: OutputFileContent): OutputFile {
+  public static forContent(
+    inputFile: InputFile,
+    content: OutputFileContent
+  ): OutputFile {
     if (inputFile.fileContent.value === content.value) {
-      throw new Error('illegal output file, content did not change')
+      throw new Error('illegal output file, content did not change');
     }
-    return new OutputFile(inputFile, content)
+    return new OutputFile(inputFile, content);
   }
 }
