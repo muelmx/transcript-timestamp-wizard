@@ -14,6 +14,11 @@ module.exports = {
       inlineSource: '.(js|css)$', // embed all javascript and css inline
       cache: false
     }),
+    new HtmlWebpackPlugin({
+      filename: '404.html',
+      template: 'src/404.html',
+      inject: false
+    }),
     new HtmlInlineScriptPlugin({
       htmlMatchPattern: [/index.html$/]
     })
