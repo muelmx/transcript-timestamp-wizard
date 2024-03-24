@@ -14,11 +14,12 @@ module.exports = {
       inlineSource: '.(js|css)$', // embed all javascript and css inline
       cache: false
     }),
-    new HtmlWebpackPlugin({
-      filename: '404.html',
-      template: 'src/404.html',
-      inject: false
-    }),
+    // new HtmlWebpackPlugin({
+    //   filename: '404.html',
+    //   template: 'src/404.html',
+    //   inject: false,
+    //   minify: false
+    // }),
     new HtmlInlineScriptPlugin({
       htmlMatchPattern: [/index.html$/]
     })
@@ -51,7 +52,7 @@ module.exports = {
     minimizer: [new TerserPlugin()]
   },
   resolve: {
-    extensions: ['.ts', '.js']
+    extensions: ['.ts']
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
