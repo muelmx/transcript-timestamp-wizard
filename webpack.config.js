@@ -1,12 +1,13 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const HtmlInlineScriptPlugin = require("html-inline-script-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 
-const isDev = process.env.NODE_ENV !== "production";
+const isDev =  process.env.NODE_ENV !== "production";
 
 module.exports = {
   mode: isDev ? "none" : "production",
-  devtool: "inline-source-map",
+  devtool: isDev ? "inline-source-map" : undefined,
   plugins: [
     new HtmlWebpackPlugin({
       template: "src/index.html",
@@ -25,6 +26,10 @@ module.exports = {
         exclude: /node_modules/,
       },
     ],
+  },
+  optimization: {
+    minimize: !isDev,
+    minimizer: [new TerserPlugin()],
   },
   resolve: {
     extensions: [".ts", ".js"],
