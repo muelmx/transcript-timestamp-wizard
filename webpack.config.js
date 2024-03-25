@@ -2,6 +2,7 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const HtmlInlineScriptPlugin = require('html-inline-script-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
+const CopyPlugin = require("copy-webpack-plugin");
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -14,15 +15,14 @@ module.exports = {
       inlineSource: '.(js|css)$', // embed all javascript and css inline
       cache: false
     }),
-    // new HtmlWebpackPlugin({
-    //   filename: '404.html',
-    //   template: 'src/404.html',
-    //   inject: false,
-    //   minify: false
-    // }),
     new HtmlInlineScriptPlugin({
       htmlMatchPattern: [/index.html$/]
-    })
+    }),
+    new CopyPlugin({
+      patterns: [
+        { from: path.resolve(__dirname, 'src', '404.html'), to: path.resolve(__dirname, 'dist', '404.html') },
+      ],
+    }),
   ],
   module: {
     rules: [
