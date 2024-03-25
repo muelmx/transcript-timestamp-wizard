@@ -58,6 +58,7 @@ const onFilesChange = (e: Event): void => {
 
 const onTransform = async(e: Event): Promise<void> => {
   try {
+    setTransformButtonEnabled(false);
     const files = getFilesFromInput();
     const result = await transformInputFiles(
       files.map((f) => BrowserFileProvider.forFile(f)),
@@ -72,6 +73,8 @@ const onTransform = async(e: Event): Promise<void> => {
     resetToInitial();
   } catch (error) {
     setErrorContent((error as Error).message);
+  } finally {
+    setTransformButtonEnabled(true);
   }
 };
 
