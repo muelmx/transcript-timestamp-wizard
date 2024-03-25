@@ -19,6 +19,9 @@ export class FileName {
 }
 
 export class InputFileContent {
+  private static readonly validationRegex =
+    /\d{2}:\d{2}:\d{2}:\d{2} - \d{2}:\d{2}:\d{2}:\d{2}[\r\n|\r|\n].*\d[\r\n|\r|\n].*/gm;
+
   private constructor(public readonly value: string) {}
 
   public static fromString(unsafe: string): InputFileContent {
@@ -26,12 +29,16 @@ export class InputFileContent {
     if (safe.length < 1) {
       throw new Error('illegal file content');
     }
-    // TODO: regex validation
+    if ((this.validationRegex.exec(safe)?.length ?? 0) < 1) {
+      throw new Error('illegal file format');
+    }
     return new InputFileContent(safe);
   }
 }
 
 export class OutputFileContent {
+  private static readonly validationRegex = /\d{2}:\d{2}:\d{2}.\d{2}\s.*/gm;
+
   private constructor(public readonly value: string) {}
 
   public static fromString(unsafe: string): OutputFileContent {
@@ -39,7 +46,9 @@ export class OutputFileContent {
     if (safe.length < 1) {
       throw new Error('illegal file content');
     }
-    // TODO: regex validation
+    if ((this.validationRegex.exec(safe)?.length ?? 0) < 1) {
+      throw new Error('illegal file format');
+    }
     return new OutputFileContent(safe);
   }
 }
@@ -50,8 +59,20 @@ export class InputFile {
     public readonly fileContent: InputFileContent,
   ) {}
 
-  public static forFile(name: FileName, content: InputFileContent): InputFile {
+  private static forFile(name: FileName, content: InputFileContent): InputFile {
     return new InputFile(name, content);
+  }
+
+  public static fromString(name: string, content: string): InputFile {
+    try {
+      const fileName = FileName.fromString(name);
+      const fileContent = InputFileContent.fromString(content);
+      return InputFile.forFile(fileName, fileContent);
+    } catch (error) {
+      throw new Error(
+        `invalid input file ${name}: ${(error as Error).message}`,
+      );
+    }
   }
 }
 
@@ -61,15 +82,28 @@ export class OutputFile {
     public readonly fileContent: OutputFileContent,
   ) {}
 
-  public static forContent(
+  private static forContent(
     inputFile: InputFile,
     content: OutputFileContent,
   ): OutputFile {
     if (inputFile.fileContent.value === content.value) {
       throw new Error(
-        `illegal output file, content of ${inputFile.fileName.value} did not change`,
+        `invalid output file ${inputFile.fileName.value}: content did not change`,
       );
     }
     return new OutputFile(inputFile, content);
+  }
+
+  public static fromString(inputFile: InputFile, content: string): OutputFile {
+    try {
+      const fileContent = OutputFileContent.fromString(content);
+      return OutputFile.forContent(inputFile, fileContent);
+    } catch (error) {
+      throw new Error(
+        `invalid output file ${inputFile.fileName.value}: ${
+          (error as Error).message
+        }`,
+      );
+    }
   }
 }

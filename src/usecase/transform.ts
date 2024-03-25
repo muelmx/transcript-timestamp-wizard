@@ -2,12 +2,12 @@ import {
   type BlobProvider,
   type FileProvider,
   type InputFile,
-  type OutputFile
+  type OutputFile,
 } from '../domain/files';
 import { Transformer } from '../domain/transformer';
 
 export const transformInputFile = async(
-  provider: FileProvider
+  provider: FileProvider,
 ): Promise<OutputFile> => {
   const inputFile = await provider.provideFile();
   const transformer = Transformer.forInputFile(inputFile);
@@ -16,15 +16,15 @@ export const transformInputFile = async(
 };
 
 const isFulfilled = <T>(
-  p: PromiseSettledResult<T>
+  p: PromiseSettledResult<T>,
 ): p is PromiseFulfilledResult<T> => p.status === 'fulfilled';
 const isRejected = <T>(
-  p: PromiseSettledResult<T>
+  p: PromiseSettledResult<T>,
 ): p is PromiseRejectedResult => p.status === 'rejected';
 
 export const transformInputFiles = async(
   inputProvider: FileProvider[],
-  blobProvider: BlobProvider
+  blobProvider: BlobProvider,
 ): Promise<Blob> => {
   const readPromises = inputProvider.map(async(i) => await i.provideFile());
   const inputReaderResult = await Promise.allSettled<InputFile>(readPromises);
@@ -32,9 +32,9 @@ export const transformInputFiles = async(
   const failed = inputReaderResult.filter(isRejected);
   if (failed.length > 0) {
     throw new Error(
-      `reading file(s) failed: ${failed
-        .map((f) => (f.reason as Error).message)
-        .join('\n')}`
+      `reading file(s) failed:\n${failed
+        .map((f) => `- ${(f.reason as Error).message}`)
+        .join('\n')}`,
     );
   }
 
@@ -58,9 +58,9 @@ export const transformInputFiles = async(
 
   if (transformerErrors.length > 0) {
     throw new Error(
-      `transforming file(s) failed: ${transformerErrors
-        .map((e) => e.message)
-        .join('\n')}`
+      `transforming file(s) failed:\n${transformerErrors
+        .map((e) => `- ${e.message}`)
+        .join('\n')}`,
     );
   }
 

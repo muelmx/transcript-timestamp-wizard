@@ -7,3 +7,11 @@ html {
 input {
     margin-top: 16px;
 }
+
+#errorWrapper {
+    background-color: darkred;
+    padding: 8px;
+    color: white;
+    display: none;
+    white-space: pre-line;
+}

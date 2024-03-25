@@ -4,11 +4,17 @@ import { ClientZipBlobProvider } from './client-zip-blob-provider';
 
 const domFileSelect = 'fileSelect';
 const domTransform = 'doTransform';
+const domErrorWrapper = 'errorWrapper';
+const domErrorContent = 'errorContent';
 
 const getFileInput = (): HTMLInputElement =>
   document.getElementById(domFileSelect) as HTMLInputElement;
 const getTransformButton = (): HTMLButtonElement =>
   document.getElementById(domTransform) as HTMLButtonElement;
+const getErrorWrapper = (): HTMLDivElement =>
+  document.getElementById(domErrorWrapper) as HTMLDivElement;
+const getErrorContent = (): HTMLParagraphElement =>
+  document.getElementById(domErrorContent) as HTMLParagraphElement;
 
 const getFilesFromInput = (): File[] => {
   const target = getFileInput();
@@ -26,9 +32,23 @@ const setTransformButtonEnabled = (enabled: boolean): void => {
     !enabled;
 };
 
+const setErrorContent = (content: string | undefined): void => {
+  const wrapper = getErrorWrapper();
+  const element = getErrorContent();
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  if (content) {
+    element.innerText = content;
+    wrapper.style.display = 'table';
+  } else {
+    element.innerText = '';
+    wrapper.style.display = 'none';
+  }
+};
+
 const resetToInitial = (): void => {
   getFileInput().value = '';
   setTransformButtonEnabled(false);
+  setErrorContent(undefined);
 };
 
 const onFilesChange = (e: Event): void => {
@@ -51,8 +71,7 @@ const onTransform = async(e: Event): Promise<void> => {
     link.remove();
     resetToInitial();
   } catch (error) {
-    // TODO: improve error rendering
-    alert(error);
+    setErrorContent((error as Error).message);
   }
 };
 

@@ -1,19 +1,32 @@
-import { type InputFile, OutputFile, OutputFileContent } from './files';
+import { type InputFile, OutputFile } from './files';
 
+/*
+ This regular expression parses the input transcripts in Adobe Premiere format
+The following capture groups are available
+
+$1: Start timestamp until seconds
+$2: Start timestamp milliseconds
+$3: End timestamp until seconds
+$4: End timestamp milliseconds
+$5: Speaker
+$6: Content
+
+The regular expressions matches line breaks as [\r\n|\r|\n]
+*/
 const transformerRegex =
-  /(\d{2}:\d{2}:\d{2}:\d{2}) - (\d{2}:\d{2}:\d{2}:\d{2})[\r\n|\r|\n](.*\d)[\r\n|\r|\n](.*)/gm;
+  /(\d{2}:\d{2}:\d{2}):(\d{2}) - (\d{2}:\d{2}:\d{2}):(\d{2})[\r\n|\r|\n]\s*(.*\d)[\r\n|\r|\n](.*)/gm;
 
+const timeContentDelimiter = ' ';
 export class Transformer {
   private constructor(private readonly inputFile: InputFile) {}
 
   public transform(): OutputFile {
     const transformedString = this.inputFile.fileContent.value.replace(
       transformerRegex,
-      '$1 $4'
+      `$1.$2${timeContentDelimiter}$6`,
     );
-    const outputContent: OutputFileContent =
-      OutputFileContent.fromString(transformedString);
-    return OutputFile.forContent(this.inputFile, outputContent);
+
+    return OutputFile.fromString(this.inputFile, transformedString);
   }
 
   public static forInputFile(i: InputFile): Transformer {
