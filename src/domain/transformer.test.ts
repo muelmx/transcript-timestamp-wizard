@@ -1,21 +1,31 @@
 import { expect, test } from 'vitest';
 import { Transformer } from './transformer';
-import { InputFile, InputFileContent } from './files';
+import { InputFile } from './files';
 import { TestData } from '../__test__/literals';
 
-test('transformer correctly transforms input', () => {
+test('transformer correctly transforms input with remove speakers', () => {
   const result = Transformer.forInputFile(
-    InputFile.fromString('test.txt', TestData.input.value),
-  ).transform();
+    InputFile.fromString('test.txt', TestData.input),
+  ).transform({ removeSpeakers: true });
 
   console.log(result.fileContent.value.length);
-  console.log(TestData.output.value.length);
-  expect(result.fileContent.value).toEqual(TestData.output.value);
+  console.log(TestData.outputWithoutSpeakers.length);
+  expect(result.fileContent.value).toEqual(TestData.outputWithoutSpeakers);
+});
+
+test('transformer correctly transforms input without remove speakers', () => {
+  const result = Transformer.forInputFile(
+    InputFile.fromString('test.txt', TestData.input),
+  ).transform({ removeSpeakers: false });
+
+  console.log(result.fileContent.value.length);
+  console.log(TestData.outputWithoutSpeakers.length);
+  expect(result.fileContent.value).toEqual(TestData.outputWithSpeakers);
 });
 
 test('illegal file content throws', () => {
   expect(() =>
-    InputFileContent.fromString('illegal file content'),
+    InputFile.fromString('file.txt', 'illegal file content'),
   ).to.toThrowError('illegal file format');
 });
 
@@ -27,6 +37,6 @@ test('illegal file from string throws', () => {
 
 test('opening output data throws', () => {
   expect(() =>
-    InputFile.fromString('name.txt', TestData.output.value),
+    InputFile.fromString('name.txt', TestData.outputWithoutSpeakers),
   ).to.toThrowError('invalid input file name.txt: illegal file format');
 });

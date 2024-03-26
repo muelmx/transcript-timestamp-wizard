@@ -17,13 +17,19 @@ const transformerRegex =
   /(\d{2}:\d{2}:\d{2}):(\d{2}) - (\d{2}:\d{2}:\d{2}):(\d{2})[\r\n|\r|\n]\s*(.*\d)[\r\n|\r|\n](.*)/gm;
 
 const timeContentDelimiter = ' ';
+
+interface TransformerOptions {
+  removeSpeakers: boolean
+}
+
 export class Transformer {
   private constructor(private readonly inputFile: InputFile) {}
 
-  public transform(): OutputFile {
+  public transform(options: TransformerOptions): OutputFile {
+    const speakerInformation = options.removeSpeakers ? '' : '$5: '
     const transformedString = this.inputFile.fileContent.value.replace(
       transformerRegex,
-      `$1.$2${timeContentDelimiter}$6`,
+      `$1.$2${timeContentDelimiter}${speakerInformation}$6`,
     );
 
     return OutputFile.fromString(this.inputFile, transformedString);

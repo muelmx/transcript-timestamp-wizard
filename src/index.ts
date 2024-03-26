@@ -1,4 +1,4 @@
 import './index.scss';
-import { init } from './infra/dom-adapter'
+import init from './infra/dom-controller';
 
-window.onload = init
+window.onload = init;

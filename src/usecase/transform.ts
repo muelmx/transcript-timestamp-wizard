@@ -1,17 +1,17 @@
-import {
-  type BlobProvider,
-  type FileProvider,
-  type InputFile,
-  type OutputFile,
-} from '../domain/files';
+import { type BlobProvider } from '../domain/blob-provider';
+import { type FileProvider } from '../domain/file-provider';
+import { type InputFile, type OutputFile } from '../domain/files';
 import { Transformer } from '../domain/transformer';
+
+interface TransformUseCaseOptions { removeSpeakers: boolean }
 
 export const transformInputFile = async(
   provider: FileProvider,
+  options: TransformUseCaseOptions,
 ): Promise<OutputFile> => {
   const inputFile = await provider.provideFile();
   const transformer = Transformer.forInputFile(inputFile);
-  const outputFile = transformer.transform();
+  const outputFile = transformer.transform(options);
   return outputFile;
 };
 
@@ -25,6 +25,7 @@ const isRejected = <T>(
 export const transformInputFiles = async(
   inputProvider: FileProvider[],
   blobProvider: BlobProvider,
+  options: TransformUseCaseOptions,
 ): Promise<Blob> => {
   const readPromises = inputProvider.map(async(i) => await i.provideFile());
   const inputReaderResult = await Promise.allSettled<InputFile>(readPromises);
@@ -46,7 +47,7 @@ export const transformInputFiles = async(
   const transformedFiles = transformers
     .map((t) => {
       try {
-        return t.transform();
+        return t.transform(options);
       } catch (error) {
         transformerErrors.push(error as Error);
         return null;

@@ -1,5 +1,6 @@
 import { type InputWithSizeMeta, downloadZip } from 'client-zip';
-import { type BlobProvider, type OutputFile } from '../domain/files';
+import { type OutputFile } from '../domain/files';
+import { type BlobProvider } from '../domain/blob-provider';
 
 export class ClientZipBlobProvider implements BlobProvider {
   async generateBlob(files: OutputFile[]): Promise<Blob> {

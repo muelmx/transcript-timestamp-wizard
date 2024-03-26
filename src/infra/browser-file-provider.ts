@@ -1,4 +1,5 @@
-import { type FileProvider, InputFile } from '../domain/files';
+import { type FileProvider } from '../domain/file-provider';
+import { InputFile } from '../domain/files';
 
 export class BrowserFileProvider implements FileProvider {
   private constructor(private readonly file: File) {}

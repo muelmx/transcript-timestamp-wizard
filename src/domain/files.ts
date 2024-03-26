@@ -1,12 +1,4 @@
-export interface FileProvider {
-  provideFile: () => Promise<InputFile>
-}
-
-export interface BlobProvider {
-  generateBlob: (files: OutputFile[]) => Promise<Blob>
-}
-
-export class FileName {
+class FileName {
   private constructor(public readonly value: string) {}
 
   public static fromString(unsafe: string): FileName {
@@ -17,8 +9,7 @@ export class FileName {
     return new FileName(safe);
   }
 }
-
-export class InputFileContent {
+class InputFileContent {
   private static readonly validationRegex =
     /\d{2}:\d{2}:\d{2}:\d{2} - \d{2}:\d{2}:\d{2}:\d{2}[\r\n|\r|\n].*\d[\r\n|\r|\n].*/gm;
 
@@ -36,7 +27,7 @@ export class InputFileContent {
   }
 }
 
-export class OutputFileContent {
+class OutputFileContent {
   private static readonly validationRegex = /\d{2}:\d{2}:\d{2}.\d{2}\s.*/gm;
 
   private constructor(public readonly value: string) {}

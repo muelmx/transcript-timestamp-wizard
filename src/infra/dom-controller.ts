@@ -2,19 +2,22 @@ import { transformInputFiles } from '../usecase/transform';
 import { BrowserFileProvider } from './browser-file-provider';
 import { ClientZipBlobProvider } from './client-zip-blob-provider';
 
-const domFileSelect = 'fileSelect';
-const domTransform = 'doTransform';
-const domErrorWrapper = 'errorWrapper';
-const domErrorContent = 'errorContent';
+const domIdFileSelect = 'fileSelect';
+const domIdTransform = 'doTransform';
+const domIdErrorWrapper = 'errorWrapper';
+const domIdErrorContent = 'errorContent';
+const domIdRemoveSpeakerInformation = 'removeSpeakerInformation';
 
 const getFileInput = (): HTMLInputElement =>
-  document.getElementById(domFileSelect) as HTMLInputElement;
+  document.getElementById(domIdFileSelect) as HTMLInputElement;
 const getTransformButton = (): HTMLButtonElement =>
-  document.getElementById(domTransform) as HTMLButtonElement;
+  document.getElementById(domIdTransform) as HTMLButtonElement;
 const getErrorWrapper = (): HTMLDivElement =>
-  document.getElementById(domErrorWrapper) as HTMLDivElement;
+  document.getElementById(domIdErrorWrapper) as HTMLDivElement;
 const getErrorContent = (): HTMLParagraphElement =>
-  document.getElementById(domErrorContent) as HTMLParagraphElement;
+  document.getElementById(domIdErrorContent) as HTMLParagraphElement;
+const getRemoveSpeakerInformation = (): HTMLInputElement =>
+  document.getElementById(domIdRemoveSpeakerInformation) as HTMLInputElement;
 
 const getFilesFromInput = (): File[] => {
   const target = getFileInput();
@@ -27,8 +30,12 @@ const getFilesFromInput = (): File[] => {
   );
 };
 
+const getRemoveSpeakerInformationChecked = (): boolean => {
+  return !!getRemoveSpeakerInformation().checked;
+};
+
 const setTransformButtonEnabled = (enabled: boolean): void => {
-  (document.getElementById(domTransform) as HTMLButtonElement).disabled =
+  (document.getElementById(domIdTransform) as HTMLButtonElement).disabled =
     !enabled;
 };
 
@@ -60,9 +67,11 @@ const onTransform = async(e: Event): Promise<void> => {
   try {
     setTransformButtonEnabled(false);
     const files = getFilesFromInput();
+    const removeSpeakers = getRemoveSpeakerInformationChecked();
     const result = await transformInputFiles(
       files.map((f) => BrowserFileProvider.forFile(f)),
       new ClientZipBlobProvider(),
+      { removeSpeakers },
     );
     // make and click a temporary link to download the Blob
     const link = document.createElement('a');
@@ -73,12 +82,11 @@ const onTransform = async(e: Event): Promise<void> => {
     resetToInitial();
   } catch (error) {
     setErrorContent((error as Error).message);
-  } finally {
     setTransformButtonEnabled(true);
   }
 };
 
-export function init(): void {
+export default function init(): void {
   getFileInput().onchange = onFilesChange;
   getTransformButton().onclick = onTransform;
 }
