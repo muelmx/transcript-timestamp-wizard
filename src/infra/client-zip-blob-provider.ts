@@ -7,7 +7,7 @@ export class ClientZipBlobProvider implements BlobProvider {
     const now = new Date();
     const zipContent: InputWithSizeMeta[] = files.map((f) => ({
       input: f.fileContent.value,
-      name: f.inputFile.fileName.value,
+      name: f.fileName.value,
       lastModified: now
     }));
 
