@@ -76,7 +76,7 @@ const onTransform = async(e: Event): Promise<void> => {
     // make and click a temporary link to download the Blob
     const link = document.createElement('a');
     link.href = URL.createObjectURL(result);
-    link.download = 'result.zip';
+    link.download = 'timestamp-transformed-transcripts.zip';
     link.click();
     link.remove();
     resetToInitial();
