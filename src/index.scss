@@ -1,0 +1,21 @@
+html {
+    font-family: monospace;
+    margin: 0px auto;
+    max-width: 520px;
+}
+
+#fileSelect {
+    margin-top: 16px;
+}
+
+#errorWrapper {
+    background-color: darkred;
+    padding: 8px;
+    color: white;
+    display: none;
+    white-space: pre-line;
+}
+
+#commit {
+    font-size: 8px;
+}
