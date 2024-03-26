@@ -16,7 +16,9 @@ The regular expressions matches line breaks as [\r\n|\r|\n]
 const transformerRegex =
   /(\d{2}:\d{2}:\d{2}):(\d{2}) - (\d{2}:\d{2}:\d{2}):(\d{2})[\r\n|\r|\n]\s*(.*\d)[\r\n|\r|\n](.*)/gm;
 
+const milliSecondDelimiter = '.';
 const timeContentDelimiter = ' ';
+const speakerContentDelimiter = ' ';
 
 interface TransformerOptions {
   removeSpeakers: boolean
@@ -26,10 +28,13 @@ export class Transformer {
   private constructor(private readonly inputFile: InputFile) {}
 
   public transform(options: TransformerOptions): OutputFile {
-    const speakerInformation = options.removeSpeakers ? '' : '$5: '
+    // if speaker information is required, add capture group and a content delimiter
+    const speakerInformation = options.removeSpeakers
+      ? ''
+      : `$5:${speakerContentDelimiter}`;
     const transformedString = this.inputFile.fileContent.value.replace(
       transformerRegex,
-      `$1.$2${timeContentDelimiter}${speakerInformation}$6`,
+      `[$1${milliSecondDelimiter}$2]${timeContentDelimiter}${speakerInformation}$6`,
     );
 
     return OutputFile.fromString(this.inputFile, transformedString);

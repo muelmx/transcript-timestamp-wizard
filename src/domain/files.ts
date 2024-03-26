@@ -4,11 +4,20 @@ class FileName {
   public static fromString(unsafe: string): FileName {
     const safe = unsafe.trim();
     if (safe.length < 3 || safe.length > 256) {
-      throw new Error('illegal file name');
+      throw new Error(
+        'illegal file name, must be between 3 and 256 characters long.',
+      );
     }
     return new FileName(safe);
   }
+
+  public addSuffix(suffix: string): FileName {
+    return FileName.fromString(
+      this.value.replace(/(\.[\w\d_-]+)$/i, `${suffix}$1`),
+    );
+  }
 }
+
 class InputFileContent {
   private static readonly validationRegex =
     /\d{2}:\d{2}:\d{2}:\d{2} - \d{2}:\d{2}:\d{2}:\d{2}[\r\n|\r|\n].*\d[\r\n|\r|\n].*/gm;
@@ -18,27 +27,31 @@ class InputFileContent {
   public static fromString(unsafe: string): InputFileContent {
     const safe = unsafe.trim();
     if (safe.length < 1) {
-      throw new Error('illegal file content');
+      throw new Error('empty file');
     }
     if ((this.validationRegex.exec(safe)?.length ?? 0) < 1) {
-      throw new Error('illegal file format');
+      throw new Error(
+        'illegal file format, input file regular expression does not match any entry. Maybe this file was converted already?',
+      );
     }
     return new InputFileContent(safe);
   }
 }
 
 class OutputFileContent {
-  private static readonly validationRegex = /\d{2}:\d{2}:\d{2}.\d{2}\s.*/gm;
+  private static readonly validationRegex = /\[\d{2}:\d{2}:\d{2}.\d{2}\]\s.*/gm;
 
   private constructor(public readonly value: string) {}
 
   public static fromString(unsafe: string): OutputFileContent {
     const safe = unsafe.trim();
     if (safe.length < 1) {
-      throw new Error('illegal file content');
+      throw new Error('empty file');
     }
     if ((this.validationRegex.exec(safe)?.length ?? 0) < 1) {
-      throw new Error('illegal file format');
+      throw new Error(
+        'illegal file format, output file regular expression does not match any entry.',
+      );
     }
     return new OutputFileContent(safe);
   }
@@ -68,8 +81,11 @@ export class InputFile {
 }
 
 export class OutputFile {
+  private static readonly outputSuffix = '_transformed';
+
   private constructor(
     public readonly inputFile: InputFile,
+    public readonly fileName: FileName,
     public readonly fileContent: OutputFileContent,
   ) {}
 
@@ -82,7 +98,11 @@ export class OutputFile {
         `invalid output file ${inputFile.fileName.value}: content did not change`,
       );
     }
-    return new OutputFile(inputFile, content);
+    return new OutputFile(
+      inputFile,
+      inputFile.fileName.addSuffix(this.outputSuffix),
+      content,
+    );
   }
 
   public static fromString(inputFile: InputFile, content: string): OutputFile {
