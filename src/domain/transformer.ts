@@ -21,7 +21,7 @@ const timeContentDelimiter = ' ';
 const speakerContentDelimiter = ' ';
 
 interface TransformerOptions {
-  removeSpeakers: boolean
+  removeSpeakers: boolean;
 }
 
 export class Transformer {

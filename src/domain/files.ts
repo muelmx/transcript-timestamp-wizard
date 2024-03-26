@@ -29,7 +29,7 @@ class InputFileContent {
     if (safe.length < 1) {
       throw new Error('empty file');
     }
-    if ((this.validationRegex.exec(safe)?.length ?? 0) < 1) {
+    if ((safe.match(this.validationRegex)?.length ?? 0) < 1) {
       throw new Error(
         'illegal file format, input file regular expression does not match any entry. Maybe this file was converted already?',
       );
@@ -48,7 +48,7 @@ class OutputFileContent {
     if (safe.length < 1) {
       throw new Error('empty file');
     }
-    if ((this.validationRegex.exec(safe)?.length ?? 0) < 1) {
+    if ((safe.match(this.validationRegex)?.length ?? 0) < 1) {
       throw new Error(
         'illegal file format, output file regular expression does not match any entry.',
       );

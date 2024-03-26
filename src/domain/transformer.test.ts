@@ -8,8 +8,6 @@ test('transformer correctly transforms input with remove speakers', () => {
     InputFile.fromString('test.txt', TestData.input),
   ).transform({ removeSpeakers: true });
 
-  console.log(result.fileContent.value.length);
-  console.log(TestData.outputWithoutSpeakers.length);
   expect(result.fileContent.value).toEqual(TestData.outputWithoutSpeakers);
 });
 
@@ -18,8 +16,6 @@ test('transformer correctly transforms input without remove speakers', () => {
     InputFile.fromString('test.txt', TestData.input),
   ).transform({ removeSpeakers: false });
 
-  console.log(result.fileContent.value.length);
-  console.log(TestData.outputWithoutSpeakers.length);
   expect(result.fileContent.value).toEqual(TestData.outputWithSpeakers);
 });
 
@@ -39,4 +35,11 @@ test('opening output data throws', () => {
   expect(() =>
     InputFile.fromString('name.txt', TestData.outputWithoutSpeakers),
   ).to.toThrowError('invalid input file name.txt: illegal file format');
+});
+
+test('output file name is extended', () => {
+  const result = Transformer.forInputFile(
+    InputFile.fromString('test.txt', TestData.input),
+  ).transform({ removeSpeakers: false });
+  expect(result.fileName.value).toBe('test_transformed.txt');
 });
